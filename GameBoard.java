@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class GameBoard extends JFrame {
     private static final int SIZE = 8;
-    private JPanel[][] squares = new JPanel[SIZE][SIZE];
+    private JPanel[][] squares ---====== new JPanel[SIZE][SIZE];
     private ImageIcon exampleIcon;
     public String[][] piecesArray;
 
@@ -22,9 +22,20 @@ public class GameBoard extends JFrame {
         // your 2D array must be a minimum of 6 rows x 2 columns
         // you may add a row for every image if you'd like to have every square be a different color/image
 
-        piecesArray = new String[1][2];
-        piecesArray[0][0]= "temp2.png";
-        piecesArray[0][1]= "HP:200";
+        piecesArray = new String[8][8];
+
+        piecesArray[0][0]= "pawn comp sci.png";
+        piecesArray[1][0]= "1";
+        piecesArray[1][2]= "2";
+        piecesArray[1][3]= "3";
+        piecesArray[1][4]= "4";
+        piecesArray[1][5]= "5";
+        piecesArray[1][6]= "6";
+        piecesArray[1][7]= "7";
+
+
+
+        
 
         //print the contents of your 2D array
         //this is a requirement to show your 2D array is not sorted at the beginning of your program
@@ -70,7 +81,7 @@ public class GameBoard extends JFrame {
                     squares[row][col].add(pieceLabel, BorderLayout.CENTER);
                     squares[row][col].add(textLabel, BorderLayout.SOUTH);
                 }
-
+               
                 
                 add(squares[row][col]);
             }
