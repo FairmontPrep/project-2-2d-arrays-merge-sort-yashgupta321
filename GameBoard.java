@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class GameBoard extends JFrame {
     private static final int SIZE = 8;
-    private JPanel[][] squares ---====== new JPanel[SIZE][SIZE];
+    private JPanel[][] squares = new JPanel[SIZE][SIZE];
     private ImageIcon exampleIcon;
     public String[][] piecesArray;
 
@@ -24,8 +24,9 @@ public class GameBoard extends JFrame {
 
         piecesArray = new String[8][8];
 
+        
         piecesArray[0][0]= "pawn comp sci.png";
-        piecesArray[1][0]= "1";
+        piecesArray[1][0]= "rook png.png";
         piecesArray[1][2]= "2";
         piecesArray[1][3]= "3";
         piecesArray[1][4]= "4";
@@ -47,7 +48,7 @@ public class GameBoard extends JFrame {
         }
 
         exampleIcon = new ImageIcon(piecesArray[0][0]); // Load image file
-
+        
         initializeBoard();
     }
 
