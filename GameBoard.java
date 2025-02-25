@@ -1,12 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
+
 
 public class GameBoard extends JFrame {
     private static final int SIZE = 8;
     private JPanel[][] squares = new JPanel[SIZE][SIZE];
-    private ImageIcon exampleIcon;
-    public String[][] piecesArray;
-
+    private Piece[][] piecesArray = new Piece[SIZE][SIZE];
 
     public GameBoard() {
         setTitle("Chess Board");
@@ -14,90 +14,141 @@ public class GameBoard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(SIZE, SIZE));
 
-       
-
-        // create your 2d Array to store your image variables and assign positions
-        // add your code here
-        // this line of code initializes a new 2D Array of Strings the size of 1 row and 2 columns
-        // your 2D array must be a minimum of 6 rows x 2 columns
-        // you may add a row for every image if you'd like to have every square be a different color/image
-
-        piecesArray = new String[8][8];
-
-        
-        piecesArray[0][0]= "pawn comp sci.png";
-        piecesArray[1][0]= "rook png.png";
-        piecesArray[1][2]= "2";
-        piecesArray[1][3]= "3";
-        piecesArray[1][4]= "4";
-        piecesArray[1][5]= "5";
-        piecesArray[1][6]= "6";
-        piecesArray[1][7]= "7";
-
-
-
-        
-
-        //print the contents of your 2D array
-        //this is a requirement to show your 2D array is not sorted at the beginning of your program
-
-        for (int i = 0; i < piecesArray.length; i++) {
-            for (int j = 0; j < piecesArray[i].length; j++) {
-                System.out.println("piecesArray[" + i + "][" + j + "] = " + piecesArray[i][j]);
-            }
-        }
-
-        exampleIcon = new ImageIcon(piecesArray[0][0]); // Load image file
-        
         initializeBoard();
+        initializeAndSortPieces();
+        updateBoard();
     }
 
     private void initializeBoard() {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
                 squares[row][col] = new JPanel(new BorderLayout());
-
-                // creates the checkered pattern with the two colors
-                // you can add more colors or take away any you'd like
-                
-                if (row >= 2 && row <= 5) {
-                    squares[row][col].setBackground(new Color(139, 69, 19)); // brown
-                } else if ((row + col) % 2 == 0) {
-                    squares[row][col].setBackground(new Color(55, 255, 55)); //dark green
-                } else {
-                    squares[row][col].setBackground(new Color(200, 255, 200)); //lighter green
-                }
-
-
-                // this is where your sorting method will be called 
-                // you will use the column 2 values to arrange your images to the board
-                // be sure to sort them before you add them onto the board 
-                // you will use a loop to add to your 2D Array, below is an example of how to add ONE image to ONE square
-                
-                // Adding an image to specific positions (e.g., first row)
-                if (row == 0 && col==0) {
-                    Image scaledImage = exampleIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-                    JLabel pieceLabel = new JLabel(new ImageIcon(scaledImage));
-                    JLabel textLabel = new JLabel(piecesArray[0][1], SwingConstants.CENTER);
-                    squares[row][col].add(pieceLabel, BorderLayout.CENTER);
-                    squares[row][col].add(textLabel, BorderLayout.SOUTH);
-                }
-               
-                
+                squares[row][col].setBackground((row + col) % 2 == 0 ? new Color(200, 200, 200) : new Color(100, 100, 100));
                 add(squares[row][col]);
             }
         }
     }
 
+    private void initializeAndSortPieces() {
+        // Create white pieces
+        Piece[] whitePieces = {
+            new Piece("Rook", "W", 0), new Piece("Knight", "W", 1), new Piece("Bishop", "W", 2), new Piece("Queen", "W", 3),
+            new Piece("King", "W", 4), new Piece("Bishop", "W", 5), new Piece("Knight", "W", 6), new Piece("Rook", "W", 7),
+            new Piece("Pawn", "W", 8), new Piece("Pawn", "W", 9), new Piece("Pawn", "W", 10), new Piece("Pawn", "W", 11),
+            new Piece("Pawn", "W", 12), new Piece("Pawn", "W", 13), new Piece("Pawn", "W", 14), new Piece("Pawn", "W", 15)
+        };
 
-    // add your merge sort method here
-    // add a comment to every line of code that describes what the line is accomplishing
-    // your mergeSort method does not have to return any value
+        // Create black pieces
+        Piece[] blackPieces = {
+            new Piece("Rook", "B", 0), new Piece("Knight", "B", 1), new Piece("Bishop", "B", 2), new Piece("Queen", "B", 3),
+            new Piece("King", "B", 4), new Piece("Bishop", "B", 5), new Piece("Knight", "B", 6), new Piece("Rook", "B", 7),
+            new Piece("Pawn", "B", 8), new Piece("Pawn", "B", 9), new Piece("Pawn", "B", 10), new Piece("Pawn", "B", 11),
+            new Piece("Pawn", "B", 12), new Piece("Pawn", "B", 13), new Piece("Pawn", "B", 14), new Piece("Pawn", "B", 15)
+        };
+
+        // Merge sort for white and black pieces
+        mergeSort(whitePieces, 0, whitePieces.length - 1);
+        mergeSort(blackPieces, 0, blackPieces.length - 1);
+
+        // Place the sorted white pieces
+        for (int i = 0; i < 8; i++) {
+            piecesArray[0][i] = whitePieces[i]; // First row for white
+            piecesArray[1][i] = whitePieces[i + 8]; // Second row for white pawns
+        }
+
+        // Place the sorted black pieces
+        for (int i = 0; i < 8; i++) {
+            piecesArray[6][i] = blackPieces[i + 8]; // Seventh row for black pawns
+            piecesArray[7][i] = blackPieces[i]; // Last row for black
+        }
+    }
+
+    private void updateBoard() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                squares[row][col].removeAll();
+                if (piecesArray[row][col] != null) {
+                    String pieceImage = piecesArray[row][col].getPieceImage();
+                    ImageIcon icon = new ImageIcon(pieceImage);
+                    Image scaledImage = icon.getImage().getScaledInstance(40, 60, Image.SCALE_SMOOTH);
+                    squares[row][col].add(new JLabel(new ImageIcon(scaledImage)), BorderLayout.CENTER);
+                }
+                squares[row][col].revalidate();
+                squares[row][col].repaint();
+            }
+        }
+    }
+
+    private void mergeSort(Piece[] pieces, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
+            mergeSort(pieces, left, mid);
+            mergeSort(pieces, mid + 1, right);
+            merge(pieces, left, mid, right);
+        }
+    }
+
+    private void merge(Piece[] pieces, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+
+        Piece[] leftArray = new Piece[n1];
+        Piece[] rightArray = new Piece[n2];
+
+        System.arraycopy(pieces, left, leftArray, 0, n1);
+        System.arraycopy(pieces, mid + 1, rightArray, 0, n2);
+
+        int i = 0, j = 0, k = left;
+        while (i < n1 && j < n2) {
+            if (leftArray[i].getRank() <= rightArray[j].getRank()) {
+                pieces[k] = leftArray[i];
+                i++;
+            } else {
+                pieces[k] = rightArray[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < n1) {
+            pieces[k] = leftArray[i];
+            i++;
+            k++;
+        }
+
+        while (j < n2) {
+            pieces[k] = rightArray[j];
+            j++;
+            k++;
+        }
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             GameBoard board = new GameBoard();
             board.setVisible(true);
         });
+    }
+
+    // Piece class representing each chess piece
+    static class Piece {
+        private String type;
+        private String color;
+        private int rank;
+
+        public Piece(String type, String color, int rank) {
+            this.type = type;
+            this.color = color;
+            this.rank = rank;
+        }
+
+        public String getPieceImage() {
+            String piece = color + "_" + type + ".png";
+            return piece;
+        }
+
+        public int getRank() {
+            return rank;
+        }
     }
 }
