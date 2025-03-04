@@ -33,7 +33,6 @@ public class GameBoard extends JFrame {
     }
 
     private void initializeAndShufflePieces() {
-        // Define all pieces with ranks
         Piece[] correctPieces = {
             new Piece("Rook", "B", 0), new Piece("Knight", "B", 1), new Piece("Bishop", "B", 2), new Piece("Queen", "B", 3),
             new Piece("King", "B", 4), new Piece("Bishop", "B", 5), new Piece("Knight", "B", 6), new Piece("Rook", "B", 7),
